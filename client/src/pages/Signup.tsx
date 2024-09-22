@@ -6,6 +6,7 @@ import { object, string, ref, number, date, InferType } from 'yup';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import signupGif from '../assets/signupGif.gif'
 import { BorderColor } from '@mui/icons-material';
+import axios from 'axios';
 
 const validationSchema = object({
   name: string().required('Name required'),
@@ -15,7 +16,7 @@ const validationSchema = object({
       .required('Email is required'),
   password:
     string()
-      .min(8, 'Password should be of minimum 8 characters length')
+      .min(3, 'Password should be of minimum 3 characters length')
       .required('Password is required'),
   confirmPassword: string()
     .oneOf([ref('password')], 'Passwords must match')
@@ -32,19 +33,25 @@ export const Signup = () => {
       confirmPassword: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async(values) => {
+      console.log(values);
+      const response = await axios.post('http://localhost:3000/register/signup', {
+        data: values,
+      })
+      console.log(response);
     },
   });
   const paperStyle = { padding: 30, height: '65vh', width: 400, margin: '50px auto', backgroundColor: 'rgb(241 245 249)', color: 'white' }
   const inputLabelStyle = { style: { color: '#fff' } }
-  const inputBorderStyle = { style: { color: 'white', BorderColor: 'white' } }
+  const inputBorderStyle = { style: { color: 'white', BorderColor: 'white', backgroundColor: 'inherit'} }
+  const inputStyle = { style :{color: 'white'}}
+
   const style = {
     '& .MuiInput-underline:before' : {borderBottomColor: 'white'},
     '& .MuiInput-underline:after' : {borderBottomColor: 'white' },
-    "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-      borderBottomColor: "white"
-    }
+      "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+        borderBottomColor: "white"
+      }  
   }
 
   return (
@@ -74,8 +81,9 @@ export const Signup = () => {
               helperText={formik.touched.email && formik.errors.name}
               size='small'
               variant='standard'
-              slotProps={{ inputLabel: inputLabelStyle }}
+              slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
               sx={ style }
+              required
             />
             <TextField
               fullWidth
@@ -89,8 +97,9 @@ export const Signup = () => {
               helperText={formik.touched.email && formik.errors.email}
               size='small'
               variant='standard'
-              slotProps={{ inputLabel: inputLabelStyle }}
+              slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
               sx={ style }
+              required
             />
             <TextField
               fullWidth
@@ -105,8 +114,9 @@ export const Signup = () => {
               helperText={formik.touched.password && formik.errors.password}
               size='small'
               variant='standard'
-              slotProps={{ inputLabel: inputLabelStyle }}
+              slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
               sx={ style }
+              required
             />
             <TextField
               fullWidth
@@ -121,8 +131,9 @@ export const Signup = () => {
               helperText={formik.touched.password && formik.errors.confirmPassword}
               size='small'
               variant='standard'
-              slotProps={{ inputLabel: inputLabelStyle }}
+              slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
               sx={ style }
+              required
             />
           </Grid>
           <Grid display='flex' justifyContent='center' mt={5} spacing={3}>

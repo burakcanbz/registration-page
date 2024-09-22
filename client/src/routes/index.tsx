@@ -3,6 +3,7 @@ import App from '../App';
 import React from "react";
 import Login from '../pages/Login';
 import { Signup } from "../pages/Signup";
+import { Nopage } from "../pages/Nopage";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <Signup/>
+            },
+            {
+                path: '/*',
+                element: <Nopage/>
             }
         ]
     },
