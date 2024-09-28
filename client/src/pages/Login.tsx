@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Stack, Avatar, Checkbox, Button, Link, Paper, Typography, TextField, FormControlLabel, InputLabel } from '@mui/material'
+import { styled } from '@mui/system';
+import { Stack, Avatar, Checkbox, Button, Link, Paper, Typography, TextField, FormControlLabel, InputLabel, makeStyles } from '@mui/material'
 import Grid from '@mui/material/Grid2';
 import { Link as RouterLink } from 'react-router-dom'
 import LoginIcon from '@mui/icons-material/Login';
@@ -7,19 +8,39 @@ import loginGif from '../assets/loginGif.gif'
 import axios from 'axios';
 
 interface User {
-    email: String,
-    password: String
+    email: string,
+    password: string
 }
+
+const MyPaper = styled(Paper)({
+    padding: 30,
+    height: '65vh',
+    width: 400,
+    margin: '50px auto',
+    color: 'white',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${loginGif})`
+});
+
+const MyAvatar = styled(Avatar)({
+    width: 75, 
+    height: 75, 
+    bgcolor: 'rgb(220 220 220)'
+});
+
+const MyTextField = styled(TextField)({
+    
+})
 
 const Login = () => {
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [user, setUser] = useState<User>({
         email: '',
-        password: '' 
+        password: ''
     })
-    const paperStyle = { padding: 30, height: '65vh', width: 400, margin: '50px auto', color: 'white' }
     const inputLabelStyle = { style: { color: '#fff' } }
-    const inputStyle = { style :{color: 'white'}}
+    const inputStyle = { style: { color: 'white' } }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(prev => !prev);
@@ -34,9 +55,9 @@ const Login = () => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser((prev) => {
-            return{
+            return {
                 ...prev,
-                [event.target.name] : event.target.value
+                [event.target.name]: event.target.value
             }
         })
     }
@@ -50,27 +71,23 @@ const Login = () => {
         console.log(response);
     }
 
-    
+
     return (
         <Grid>
-            <Paper sx={{
-                backgroundImage: `url(${loginGif})`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover'
-            }} style={paperStyle} elevation={5}>
+            <MyPaper>
                 <form onSubmit={handleSubmit}>
                     <Grid container direction='column' rowSpacing={{ xs: 1, sm: 1, md: 1 }}>
                         <Grid display='flex' justifyContent='center' alignItems='center' mt={3}>
-                            <Avatar sx={{ width: 75, height: 75, bgcolor: 'rgb(220 220 220)' }}><LoginIcon sx={{ fontSize: '40px', color: 'black' }} /></Avatar>
+                            <MyAvatar><LoginIcon sx={{ fontSize: '40px', color: 'black' }} /></MyAvatar>
                         </Grid>
                         <Grid display='flex' justifyContent='center' alignItems='center'>
                             <Typography variant='h5' component='h1' m={2} sx={{ fontWeight: 'bold' }}> LOGIN </Typography>
                         </Grid>
                         <Grid container display='flex' flexDirection='column' rowSpacing={2} >
                             <TextField label='Email' variant='standard' type='email' name='email' fullWidth required
-                                slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }} sx={style} onChange={handleInputChange}/>
+                                slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }} sx={style} onChange={handleInputChange} />
                             <TextField label='Password' variant='standard' type='password' name='password' fullWidth required
-                                slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }} sx={style} onChange={handleInputChange}/>
+                                slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }} sx={style} onChange={handleInputChange} />
                         </Grid>
                         <Grid container mt={2}>
                             <FormControlLabel label='Remember me' control={<Checkbox style={{ color: 'yellow' }} checked={isChecked} onChange={handleChange} />} />
@@ -83,7 +100,7 @@ const Login = () => {
                         </Stack>
                     </Grid>
                 </form>
-            </Paper>
+            </MyPaper>
         </Grid>
     )
 }
