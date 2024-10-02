@@ -19,6 +19,8 @@ const userLoginController = async(req, res) => {
                 email : user.email
             }
             const token = jwt.sign({tokenData}, process.env.TOKEN_KEY, { expiresIn: 35})
+            const refreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_KEY);
+
             res.cookie('auth-token', token, {httpOnly: true, secure: true}).status(200).json({
                 message: 'Login successfully',
                 data: token,
@@ -59,12 +61,11 @@ const userSignupController = async(req, res) => {
         }
         
         const salt =  bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt, (err, res) => {
-            if(err){
-                throw new Error('Something went wrong about your password')
-            }
-        })
+        const hashedPassword = await bcrypt.hashSync(password, salt)
 
+        if(!hashedPassword){
+            throw new Error('Something went wrong  !')
+        }
         const payload = {
             name,
             email,
@@ -83,7 +84,7 @@ const userSignupController = async(req, res) => {
 
     }
     catch(err){
-        res.status().json({
+        res.json({
             user: null,
             message: err.message || err,
             success: false,
@@ -93,7 +94,63 @@ const userSignupController = async(req, res) => {
     }
 }
 
+const userPageController = async(req, res) => {
+    try{
+        const userId = req.user._id;
+        console.log("userId => ", userId);
+        const user = await UserModel.findById(userId, 'name email').exec();
+        if(!user){
+            throw new Error('User not found');
+        }
+        res.status(200).json({
+            data: user.name,
+            message: 'User page successfully loaded!',
+            success: true,
+            error: false
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            user: null,
+            message: err.message || err,
+            success: false,
+            error: true
+        })
+    }
+
+}
+
+const verifyToken = async(req, res, next) => {
+    try{
+        const token = req.cookies['auth-token']; 
+        if(!token){
+            res.status(401).send('Unauthorized: No token provided');
+        }
+
+
+
+        console.log('in verify, request path:', req.path)  
+        const decoded = await jwt.verify(token, process.env.TOKEN_KEY);
+        if (decoded){
+            req.user = decoded.tokenData;
+            next();
+        }
+        else{
+            res.status(401).send('Unauthorized');
+        }
+    }
+    catch(err){
+        return res.status(401).json({
+            message: 'Unauthorized: Invalid or expired token',
+            error: true,
+            success: false
+        });
+    }
+}
+
 module.exports = {
     userLoginController,
-    userSignupController
+    userSignupController,
+    verifyToken,
+    userPageController
 }
