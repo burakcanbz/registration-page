@@ -14,16 +14,18 @@ const userLoginController = async(req, res) => {
         const comparedPassword = await bcrypt.compare(password, user.password);
         
         if(comparedPassword){
-            const tokenData = {
-                _id : user._id,
-                email : user.email
-            }
-            const token = jwt.sign({tokenData}, process.env.TOKEN_KEY, { expiresIn: 35})
-            const refreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_KEY);
+            const token = jwt.sign({id: user._id}, process.env.TOKEN_KEY, { expiresIn: 35})
 
-            res.cookie('auth-token', token, {httpOnly: true, secure: true}).status(200).json({
+            res.cookie(String(user._id), token, 
+            {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
+            })
+            .status(200).json({
                 message: 'Login successfully',
-                data: token,
+                data: user.name,
                 success: true,
                 error: false
             })
@@ -96,7 +98,7 @@ const userSignupController = async(req, res) => {
 
 const userPageController = async(req, res) => {
     try{
-        const userId = req.user._id;
+        const userId = req.id;
         console.log("userId => ", userId);
         const user = await UserModel.findById(userId, 'name email').exec();
         if(!user){
@@ -122,22 +124,20 @@ const userPageController = async(req, res) => {
 
 const verifyToken = async(req, res, next) => {
     try{
-        const token = req.cookies['auth-token']; 
+        const cookie = req.headers.cookie;
+        const token = cookie.split('=')[1]
         if(!token){
             res.status(401).send('Unauthorized: No token provided');
         }
-
-
-
-        console.log('in verify, request path:', req.path)  
-        const decoded = await jwt.verify(token, process.env.TOKEN_KEY);
-        if (decoded){
-            req.user = decoded.tokenData;
+        console.log(token)
+        jwt.verify(String(token), process.env.TOKEN_KEY, (err, user) => {
+            if(err){
+                console.log(err)
+                return res.status(401).send('Unauthorized');
+            }
+            req.id = user.id;
             next();
-        }
-        else{
-            res.status(401).send('Unauthorized');
-        }
+        });
     }
     catch(err){
         return res.status(401).json({
@@ -148,9 +148,59 @@ const verifyToken = async(req, res, next) => {
     }
 }
 
+const refreshToken = (req, res, next) => {
+    try{
+        const cookies = req.headers.cookie;
+        const prevToken = cookies.split('=')[1];
+
+        if(!prevToken){
+            res.status(400).json({
+                message: "Couldn't find token",
+                error: true,
+                success: false
+            })
+        }
+        jwt.verify(String(prevToken), process.env.TOKEN_KEY, (err, user) => {
+            if(err){
+                res.status(403).json({
+                    message: 'Unauthorized: Invalid or expired token',
+                    error: true,
+                    success: false
+                })
+            }
+            res.clearCookie(`${user.id}`);
+            req.cookies[`${user.id}`];
+
+            console.log("before sending refresh token")
+            const token = jwt.sign({id: user.id}, process.env.TOKEN_KEY, {
+                expiresIn: '30s'
+            });
+            
+            res.cookie(String(user.id), token, 
+            {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
+            })
+            req.id = user.id;
+            console.log("before next")
+            next();
+        })
+    }
+    catch(err){
+        res.status(403).json({
+            message: 'Unauthorized: Invalid or expired token',
+            error: true,
+            success: false
+        })
+    }
+}
+
 module.exports = {
     userLoginController,
     userSignupController,
     verifyToken,
+    refreshToken,
     userPageController
 }
