@@ -14,14 +14,18 @@ const userLoginController = async(req, res) => {
         const comparedPassword = await bcrypt.compare(password, user.password);
         
         if(comparedPassword){
-            const tokenData = {
-                _id : user._id,
-                email : user.email
-            }
-            const token = jwt.sign({tokenData}, process.env.TOKEN_KEY, { expiresIn: 35})
-            res.cookie('auth-token', token, {httpOnly: true, secure: true}).status(200).json({
+            const token = jwt.sign({id: user._id}, process.env.TOKEN_KEY, { expiresIn: 35})
+
+            res.cookie(String(user._id), token, 
+            {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
+            })
+            .status(200).json({
                 message: 'Login successfully',
-                data: token,
+                data: user.name,
                 success: true,
                 error: false
             })
@@ -59,12 +63,11 @@ const userSignupController = async(req, res) => {
         }
         
         const salt =  bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt, (err, res) => {
-            if(err){
-                throw new Error('Something went wrong about your password')
-            }
-        })
+        const hashedPassword = await bcrypt.hashSync(password, salt)
 
+        if(!hashedPassword){
+            throw new Error('Something went wrong  !')
+        }
         const payload = {
             name,
             email,
@@ -83,7 +86,7 @@ const userSignupController = async(req, res) => {
 
     }
     catch(err){
-        res.status().json({
+        res.json({
             user: null,
             message: err.message || err,
             success: false,
@@ -93,7 +96,111 @@ const userSignupController = async(req, res) => {
     }
 }
 
+const userPageController = async(req, res) => {
+    try{
+        const userId = req.id;
+        console.log("userId => ", userId);
+        const user = await UserModel.findById(userId, 'name email').exec();
+        if(!user){
+            throw new Error('User not found');
+        }
+        res.status(200).json({
+            data: user.name,
+            message: 'User page successfully loaded!',
+            success: true,
+            error: false
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            user: null,
+            message: err.message || err,
+            success: false,
+            error: true
+        })
+    }
+
+}
+
+const verifyToken = async(req, res, next) => {
+    try{
+        const cookie = req.headers.cookie;
+        const token = cookie.split('=')[1]
+        if(!token){
+            res.status(401).send('Unauthorized: No token provided');
+        }
+        console.log(token)
+        jwt.verify(String(token), process.env.TOKEN_KEY, (err, user) => {
+            if(err){
+                console.log(err)
+                return res.status(401).send('Unauthorized');
+            }
+            req.id = user.id;
+            next();
+        });
+    }
+    catch(err){
+        return res.status(401).json({
+            message: 'Unauthorized: Invalid or expired token',
+            error: true,
+            success: false
+        });
+    }
+}
+
+const refreshToken = (req, res, next) => {
+    try{
+        const cookies = req.headers.cookie;
+        const prevToken = cookies.split('=')[1];
+
+        if(!prevToken){
+            res.status(400).json({
+                message: "Couldn't find token",
+                error: true,
+                success: false
+            })
+        }
+        jwt.verify(String(prevToken), process.env.TOKEN_KEY, (err, user) => {
+            if(err){
+                res.status(403).json({
+                    message: 'Unauthorized: Invalid or expired token',
+                    error: true,
+                    success: false
+                })
+            }
+            res.clearCookie(`${user.id}`);
+            req.cookies[`${user.id}`];
+
+            console.log("before sending refresh token")
+            const token = jwt.sign({id: user.id}, process.env.TOKEN_KEY, {
+                expiresIn: '30s'
+            });
+            
+            res.cookie(String(user.id), token, 
+            {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
+            })
+            req.id = user.id;
+            console.log("before next")
+            next();
+        })
+    }
+    catch(err){
+        res.status(403).json({
+            message: 'Unauthorized: Invalid or expired token',
+            error: true,
+            success: false
+        })
+    }
+}
+
 module.exports = {
     userLoginController,
-    userSignupController
+    userSignupController,
+    verifyToken,
+    refreshToken,
+    userPageController
 }

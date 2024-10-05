@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { TextField, Button, Paper, Avatar, Typography, Link, InputLabel } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { object, string, ref, number, date, InferType } from 'yup';
@@ -7,6 +7,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import signupGif from '../assets/signupGif.gif'
 import { BorderColor } from '@mui/icons-material';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
 
 const validationSchema = object({
   name: string().required('Name required'),
@@ -34,13 +36,26 @@ export const Signup = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async(values) => {
-      console.log(values);
+      try{
       const response = await axios.post('http://localhost:3000/register/signup', {
         data: values,
       })
-      console.log(response);
+      const responseData = response.data;
+      console.log(responseData)
+      if (responseData.success){
+        toast.success('User successfully signed up!')
+        navigate('/login')
+      }
+      else if(responseData.error){
+        toast.error('User already registered.')
+      }
+      }
+      catch(err){
+        toast.error('Something went wrong.')
+      }
     },
   });
+  const navigate = useNavigate();
   const paperStyle = { padding: 30, height: '65vh', width: 400, margin: '50px auto', backgroundColor: 'rgb(241 245 249)', color: 'white' }
   const inputLabelStyle = { style: { color: '#fff' } }
   const inputBorderStyle = { style: { color: 'white', BorderColor: 'white', backgroundColor: 'inherit'} }

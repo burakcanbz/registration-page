@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { styled } from '@mui/system';
 import { Stack, Avatar, Checkbox, Button, Link, Paper, Typography, TextField, FormControlLabel, InputLabel, makeStyles } from '@mui/material'
 import Grid from '@mui/material/Grid2';
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import LoginIcon from '@mui/icons-material/Login';
 import loginGif from '../assets/loginGif.gif'
 import axios from 'axios';
+
 
 interface User {
     email: string,
@@ -41,6 +42,7 @@ const Login = () => {
     })
     const inputLabelStyle = { style: { color: '#fff' } }
     const inputStyle = { style: { color: 'white' } }
+    const navigate = useNavigate();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(prev => !prev);
@@ -63,14 +65,18 @@ const Login = () => {
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        console.log('in submit ?')
         event.preventDefault()
+        console.log("in submit?")
         const response = await axios.post('http://localhost:3000/register/login', {
             data: user
         })
-        console.log(response);
+        console.log(response)
+        const responseData = response.data;
+        if (responseData.success){
+            console.log('in success')
+            navigate('/user');
+        }
     }
-
 
     return (
         <Grid>
