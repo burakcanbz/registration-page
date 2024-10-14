@@ -5,14 +5,20 @@ import { Box } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { Outlet } from 'react-router-dom';
- 
+
 function App() {
   return (
-    <>
-      <Header/>
-      <Outlet/>
-      <Footer/>
-    </>
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh" // Tüm ekran yüksekliğini kaplar
+    >
+      <Header />
+      <Box flexGrow={1} display='flex' justifyContent='center' alignItems= 'center'>
+        <Outlet />
+      </Box>
+      <Footer />
+    </Box>
   );
 }
 

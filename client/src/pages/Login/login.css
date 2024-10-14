@@ -1,0 +1,17 @@
+.textfield-main .MuiInput-underline:before {
+    border-bottom-color: white;
+}
+
+.textfield-main .MuiInput-underline:after {
+    border-bottom-color: white;
+}
+
+.textfield-main .MuiInput-underline:hover:not(.Mui-disabled):before {
+    border-bottom-color: white;
+}
+
+.textfield-main .MuiInputBase-input {
+    color: white; /* Input text color */
+    background-color: inherit; /* Inherit background color */
+    border-color: white; /* Input border color */
+}

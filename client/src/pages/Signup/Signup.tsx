@@ -4,10 +4,11 @@ import { TextField, Button, Paper, Avatar, Typography, Link, InputLabel } from '
 import Grid from '@mui/material/Grid2';
 import { object, string, ref, number, date, InferType } from 'yup';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import signupGif from '../assets/signupGif.gif'
-import { BorderColor } from '@mui/icons-material';
+import signupGif from '../../assets/signupGif.gif'
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { endpoints } from '../../common/endpoints';
+import { MyPaper } from '../../styledComponents/common';
 
 
 const validationSchema = object({
@@ -35,47 +36,42 @@ export const Signup = () => {
       confirmPassword: '',
     },
     validationSchema: validationSchema,
-    onSubmit: async(values) => {
-      try{
-      const response = await axios.post('http://localhost:3000/register/signup', {
-        data: values,
-      })
-      const responseData = response.data;
-      console.log(responseData)
-      if (responseData.success){
-        toast.success('User successfully signed up!')
-        navigate('/login')
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post(endpoints.signUp.url, {
+          data: values,
+        })
+        const responseData = response.data;
+        if (responseData.success) {
+          toast.success('User successfully signed up!')
+          navigate('/login')
+        }
+        else if (responseData.error) {
+          toast.error('User already registered.')
+        }
       }
-      else if(responseData.error){
-        toast.error('User already registered.')
-      }
-      }
-      catch(err){
+      catch (err) {
         toast.error('Something went wrong.')
       }
     },
   });
   const navigate = useNavigate();
-  const paperStyle = { padding: 30, height: '65vh', width: 400, margin: '50px auto', backgroundColor: 'rgb(241 245 249)', color: 'white' }
+  const paperStyle = { padding: 30, maxHeight: '65vh', width: 400, margin: '50px auto', backgroundColor: 'rgb(241 245 249)', color: 'white',  overflow: 'auto'}
   const inputLabelStyle = { style: { color: '#fff' } }
-  const inputBorderStyle = { style: { color: 'white', BorderColor: 'white', backgroundColor: 'inherit'} }
-  const inputStyle = { style :{color: 'white'}}
+  const inputBorderStyle = { style: { color: 'white', BorderColor: 'white', backgroundColor: 'inherit' } }
+  const inputStyle = { style: { color: 'white' } }
 
   const style = {
-    '& .MuiInput-underline:before' : {borderBottomColor: 'white'},
-    '& .MuiInput-underline:after' : {borderBottomColor: 'white' },
-      "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-        borderBottomColor: "white"
-      }  
+    '& .MuiInput-underline:before': { borderBottomColor: 'white' },
+    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+    "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+      borderBottomColor: "white"
+    }
   }
 
   return (
     <Grid container direction='column' justifyContent='center' alignItems='center'>
-      <Paper style={paperStyle} elevation={5} sx={{
-        backgroundImage: `url(${signupGif})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
-      }}>
+      <MyPaper backgroundImage={signupGif} elevation={5}>
         <form onSubmit={formik.handleSubmit}>
           <Grid container display='flex' justifyContent='center' mt={3}>
             <Avatar sx={{ width: 75, height: 75, bgcolor: 'rgb(220 220 220)' }}><AccountCircleIcon sx={{ fontSize: '50px', color: 'black' }} /></Avatar>
@@ -97,7 +93,7 @@ export const Signup = () => {
               size='small'
               variant='standard'
               slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
-              sx={ style }
+              sx={style}
               required
             />
             <TextField
@@ -113,7 +109,7 @@ export const Signup = () => {
               size='small'
               variant='standard'
               slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
-              sx={ style }
+              sx={style}
               required
             />
             <TextField
@@ -130,7 +126,7 @@ export const Signup = () => {
               size='small'
               variant='standard'
               slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
-              sx={ style }
+              sx={style}
               required
             />
             <TextField
@@ -147,7 +143,7 @@ export const Signup = () => {
               size='small'
               variant='standard'
               slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }}
-              sx={ style }
+              sx={style}
               required
             />
           </Grid>
@@ -157,7 +153,7 @@ export const Signup = () => {
             </Button>
           </Grid>
         </form>
-      </Paper>
+      </MyPaper>
     </Grid >
   );
 }

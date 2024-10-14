@@ -25,7 +25,8 @@ const userLoginController = async(req, res) => {
             })
             .status(200).json({
                 message: 'Login successfully',
-                data: user.name,
+                data: user.email,
+                token: token,
                 success: true,
                 error: false
             })
@@ -99,7 +100,6 @@ const userSignupController = async(req, res) => {
 const userPageController = async(req, res) => {
     try{
         const userId = req.id;
-        console.log("userId => ", userId);
         const user = await UserModel.findById(userId, 'name email').exec();
         if(!user){
             throw new Error('User not found');
@@ -129,7 +129,6 @@ const verifyToken = async(req, res, next) => {
         if(!token){
             res.status(401).send('Unauthorized: No token provided');
         }
-        console.log(token)
         jwt.verify(String(token), process.env.TOKEN_KEY, (err, user) => {
             if(err){
                 console.log(err)
@@ -171,7 +170,6 @@ const refreshToken = (req, res, next) => {
             res.clearCookie(`${user.id}`);
             req.cookies[`${user.id}`];
 
-            console.log("before sending refresh token")
             const token = jwt.sign({id: user.id}, process.env.TOKEN_KEY, {
                 expiresIn: '30s'
             });
@@ -184,7 +182,6 @@ const refreshToken = (req, res, next) => {
                 expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
             })
             req.id = user.id;
-            console.log("before next")
             next();
         })
     }
