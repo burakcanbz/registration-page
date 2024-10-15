@@ -11,7 +11,6 @@ import { toast } from 'react-toastify';
 import { endpoints } from '../../common/endpoints';
 const MyPaper = lazy(() => import('../../styledComponents/common').then(module => ({ default: module.MyPaper })));
 
-
 const validationSchema = object({
   name: string().required('Name required'),
   email:
@@ -60,14 +59,14 @@ export const Signup = () => {
   const paperStyle = { padding: 30, maxHeight: '65vh', width: 400, margin: '50px auto', backgroundColor: 'rgb(241 245 249)', color: 'white', overflow: 'auto' }
   const inputLabelStyle = { style: { color: '#fff' } }
   const inputBorderStyle = { style: { color: 'white', BorderColor: 'white', backgroundColor: 'inherit' } }
-  const inputStyle = { style: { color: 'white' } }
+  const inputStyle = { style: { color: 'white', backgroundColor: 'transparent' } }
 
   const style = {
     '& .MuiInput-underline:before': { borderBottomColor: 'white' },
     '& .MuiInput-underline:after': { borderBottomColor: 'white' },
     "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
       borderBottomColor: "white"
-    }
+    },
   }
 
   return (
@@ -75,11 +74,11 @@ export const Signup = () => {
       <Suspense fallback={<CircularProgress />}>
         <MyPaper backgroundImage={signupGif} elevation={5}>
           <form onSubmit={formik.handleSubmit}>
-            <Grid container display='flex' justifyContent='center' mt={3}>
+            <Grid container display='flex' justifyContent='center' mt={1}>
               <Avatar sx={{ width: 75, height: 75, bgcolor: 'rgb(220 220 220)' }}><AccountCircleIcon sx={{ fontSize: '50px', color: 'black' }} /></Avatar>
             </Grid>
             <Grid display='flex' justifyContent='center' alignItems='center'>
-              <Typography variant='h5' component='h1' m={3} sx={{ fontWeight: 'bold' }}> SIGNUP </Typography>
+              <Typography variant='h5' component='h1' m={1} sx={{ fontWeight: 'bold' }}> SIGNUP </Typography>
             </Grid>
             <Grid container rowSpacing={2}>
               <TextField
@@ -149,7 +148,7 @@ export const Signup = () => {
                 required
               />
             </Grid>
-            <Grid display='flex' justifyContent='center' mt={5} spacing={3}>
+            <Grid display='flex' justifyContent='center' mt={5} spacing={2}>
               <Button type='submit' color='secondary' variant='contained' fullWidth={false} sx={{ padding: '10px 50px' }}>
                 <Typography variant='body1'>SIGNUP</Typography>
               </Button>
