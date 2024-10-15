@@ -20,7 +20,6 @@ export const User = () => {
         withCredentials: true,
       })
       const responseData = response.data;
-      console.log("resp data => ", responseData)
       dispatch(setIsLoggedIn(true))
       setUserName(responseData.data)
     }

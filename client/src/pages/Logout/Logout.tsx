@@ -4,9 +4,11 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../store/userLoginSlice'
 import { endpoints } from '../../common/endpoints' 
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
 
 const Logout: React.FC = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const sendLogout = async() => {
         try{
             const response = await axios.get(endpoints.logout.url, {
@@ -16,6 +18,7 @@ const Logout: React.FC = () => {
             if(responseData.success){
                 toast.success(`${responseData.data} successfully logged out.`)
                 dispatch(logout())
+                navigate('/login')
             }
             else{
                 toast.error('error happened')

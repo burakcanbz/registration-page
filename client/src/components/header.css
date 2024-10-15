@@ -1,0 +1,8 @@
+.button-main {
+    transition: background-image 1s ease
+}
+
+.button-main:hover {
+    background-image: linear-gradient(to right bottom, #54485f, #8295ff);
+    box-shadow: 0 4px 20px rgba(67, 0, 137, 0.3);
+}

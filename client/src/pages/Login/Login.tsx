@@ -53,7 +53,6 @@ const Login: React.FC = () => {
             withCredentials: true, // Important for sending cookies
 
         })
-        console.log(response)
         const responseData = response.data;
         if (responseData.success) {
             dispatch(loginSuccess({ email: response.data.data, token: response.data.token }))
@@ -78,7 +77,7 @@ const Login: React.FC = () => {
                             <Grid display='flex' justifyContent='center' alignItems='center'>
                                 <Typography variant='h5' component='h1' m={2} sx={{ fontWeight: 'bold' }}> LOGIN </Typography>
                             </Grid>
-                            <Grid container display='flex' flexDirection='column' rowSpacing={2} >
+                            <Grid container display='flex' flexDirection='column' rowSpacing={1} >
                                 <TextField label='Email' variant='standard' type='email' name='email' fullWidth required
                                     slotProps={{ inputLabel: inputLabelStyle, input: inputStyle }} className='textfield-main' onChange={handleInputChange} />
                                 <TextField label='Password' variant='standard' type='password' name='password' fullWidth required
@@ -87,7 +86,7 @@ const Login: React.FC = () => {
                             <Grid container mt={2}>
                                 <FormControlLabel label='Remember me' control={<Checkbox style={{ color: 'yellow' }} checked={isChecked} onChange={handleChange} />} />
                             </Grid>
-                            <Stack direction='column' alignItems='center' marginTop='20px' spacing={3}>
+                            <Stack direction='column' alignItems='center' marginTop='20px' spacing={2}>
                                 <Button disabled={!isOnline} type='submit' color='inherit' variant='contained' size='small' fullWidth={false} sx={{ padding: '10px 50px' }}>
                                     <Typography variant='body1'>LOGIN</Typography>
                                 </Button>
