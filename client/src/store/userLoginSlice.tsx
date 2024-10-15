@@ -18,10 +18,13 @@ export const userLoginSlice = createSlice({
             state.email = '';
             state.token = null;
             state.isLoggedIn = false;
+        },
+        setIsLoggedIn: (state, action) => {
+            state.isLoggedIn = action.payload;
         }
     }
 })
 
-export const { loginSuccess, logout } = userLoginSlice.actions;
+export const { loginSuccess, logout, setIsLoggedIn } = userLoginSlice.actions;
 
 export const userLoginReducer = userLoginSlice.reducer;

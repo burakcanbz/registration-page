@@ -10,8 +10,12 @@ export const endpoints = {
         url: `${backendRegisterDomain}/login`,
         method: 'POST'
     },
+    logout: {
+        url: `${backendRegisterDomain}/logout`,
+        method: 'GET'
+    },
     user: {
-        url: `${backendDomain}`,
+        url: `${backendDomain}/user`,
         method: 'GET' 
-    }
+    },
 }

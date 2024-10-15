@@ -4,8 +4,12 @@ import { IconButton } from '@mui/material';
 import AppleLogo from '../assets/appleLogo.png'
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const Header = () => {
+    const isLoggedIn = useSelector((state: RootState) => state.userLogin.isLoggedIn)
+    console.log("header is logged in ?", isLoggedIn);
     return (
         <header>
             <Box>
@@ -29,11 +33,17 @@ const Header = () => {
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             </Typography>
                             <Stack direction='row' spacing={2}>
-                                <Link component={RouterLink} to='/' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Home</Typography></Button></Link>
-                                <Link component={RouterLink} to='/features' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Features</Typography></Button></Link>
-                                <Link component={RouterLink} to='/about' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>About</Typography></Button></Link>
-                                <Link component={RouterLink} to='/login' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Login</Typography></Button></Link>                            
-                                </Stack>
+                                {isLoggedIn ?
+                                    <>
+                                        <Link component={RouterLink} to='/' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Home</Typography></Button></Link>
+                                        <Link component={RouterLink} to='/features' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Features</Typography></Button></Link>
+                                        <Link component={RouterLink} to='/about' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>About</Typography></Button></Link>
+                                        <Link component={RouterLink} to='/logout' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Logout</Typography></Button></Link>
+                                    </>
+                                    :
+                                    <Link component={RouterLink} to='/login' underline='none' color='inherit'><Button color='inherit'><Typography variant='body1'>Login</Typography></Button></Link>
+                                }
+                            </Stack>
                         </Toolbar>
                     </Container>
                 </AppBar>

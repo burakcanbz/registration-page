@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 
 import { Paper, Avatar } from '@mui/material'
 
-interface MyPaperProps extends React.ComponentProps<typeof Paper> {  
+interface MyPaperProps extends React.ComponentProps<typeof Paper> {  //This approach automatically includes all props from the Paper component, ensuring you don’t miss any props that are already defined in Paper.
     backgroundImage?: string;
 }
 
@@ -26,10 +26,5 @@ const MyAvatar = styled(Avatar)({
     height: 75, 
     bgcolor: 'rgb(220 220 220)'
 });
-
-
-// const MyTextField = styled(TextField)({
-//     ...
-// })
 
 export { MyPaper, MyAvatar};

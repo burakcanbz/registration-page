@@ -10,7 +10,6 @@ const userLoginController = async(req, res) => {
         if(!user){
             throw new Error('User not found');
         }
-
         const comparedPassword = await bcrypt.compare(password, user.password);
         
         if(comparedPassword){
@@ -21,6 +20,7 @@ const userLoginController = async(req, res) => {
                 httpOnly: true,
                 secure: true,
                 path: '/',
+                sameSite: 'lax',
                 expiresIn: new Date(Date.now() + 1000 * 30), //30 seconds  
             })
             .status(200).json({
@@ -194,9 +194,35 @@ const refreshToken = (req, res, next) => {
     }
 }
 
+const userLogoutController = async (req, res) => {
+
+    try{
+        const user = await UserModel.findById(req.id, 'name email').exec();
+        
+        res.clearCookie(`${user.id}`);
+        req.cookies[`${user.id}`];
+        res.status(200).json({
+            data: user.name,
+            message: 'User successfully logged out!',
+            success: true,
+            error: false
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            user: null,
+            message: err.message || err,
+            success: false,
+            error: true
+        })
+    }
+
+}
+
 module.exports = {
     userLoginController,
     userSignupController,
+    userLogoutController,
     verifyToken,
     refreshToken,
     userPageController

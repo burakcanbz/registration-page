@@ -15,9 +15,6 @@ app.use(cors({
     origin: 'http://localhost:5000',
     credentials: true
 }))
-// app.use('/', (req, res) => {
-//     console.log('hello')
-// })
 
 app.use('/register', registerRouter)
 
