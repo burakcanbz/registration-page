@@ -35,7 +35,6 @@ const Header = () => {
                             <Stack direction='row' spacing={2}>
                                 {isLoggedIn ?
                                     <>
-<<<<<<< HEAD
                                         <Link component={RouterLink} to='/' underline='none' color='inherit'><Button variant='outlined' color='inherit'  className='button-main'><Typography variant='body1'>Home</Typography></Button></Link>
                                         <Link component={RouterLink} to='/features' underline='none' color='inherit'><Button variant='outlined' color='inherit'  className='button-main'><Typography variant='body1'>Features</Typography></Button></Link>
                                         <Link component={RouterLink} to='/about' underline='none' color='inherit'><Button variant='outlined' color='inherit'  className='button-main'><Typography variant='body1'>About</Typography></Button></Link>
@@ -43,15 +42,6 @@ const Header = () => {
                                     </>
                                     :
                                         <Link component={RouterLink} to='/login' underline='none' color='inherit'><Button variant='outlined' color='inherit' size='large' className='button-main'><Typography variant='body1'>Login</Typography></Button></Link>
-=======
-                                        <Link component={RouterLink} to='/' underline='none' color='inherit'><Button color='inherit'  className='button-main'><Typography variant='body1'>Home</Typography></Button></Link>
-                                        <Link component={RouterLink} to='/features' underline='none' color='inherit'><Button color='inherit'  className='button-main'><Typography variant='body1'>Features</Typography></Button></Link>
-                                        <Link component={RouterLink} to='/about' underline='none' color='inherit'><Button color='inherit'  className='button-main'><Typography variant='body1'>About</Typography></Button></Link>
-                                        <Link component={RouterLink} to='/logout' underline='none' color='inherit'><Button color='inherit'  className='button-main'><Typography variant='body1'>Logout</Typography></Button></Link>
-                                    </>
-                                    :
-                                        <Link component={RouterLink} to='/login' underline='none' color='inherit'><Button color='inherit' size='large' className='button-main'><Typography variant='body1'>Login</Typography></Button></Link>
->>>>>>> master
                                 }
                             </Stack>
                         </Toolbar>
