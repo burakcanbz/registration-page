@@ -3,7 +3,8 @@ import Grid from '@mui/material/Grid2'
 
 const Footer = () => {
 
-    const footerStyle = { bottom: 0, bgcolor: 'text.secondary', padding: '20px', textAlign: 'center', fontWeight: '550', fontSize: '16px' }
+    const footerStyle = { marginTop: 'auto', bottom: 0, left: 0, right: 0, bgcolor: 'text.secondary', padding: '20px', textAlign: 'center', fontWeight: '550', fontSize: '16px' }
+    
     return (
         <Grid sx={footerStyle} width='100%'>
             <Stack>
