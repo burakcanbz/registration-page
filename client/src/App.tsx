@@ -10,7 +10,7 @@ function App() {
   return (
     <Box
       display="flex"
-      flexDirection="column"
+      flexDirection="column" 
       minHeight="100vh" // Tüm ekran yüksekliğini kaplar
     >
       <Header />
