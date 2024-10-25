@@ -55,7 +55,7 @@ This project provides a simple and user-friendly registration page where users c
   cd client/
   npm start
 
-***Note: To run api properley it needs MongoDB Configuration.***
+***Note: To run api properly it needs MongoDB Configuration.***
 
 ## MongoDB Configuration
 
