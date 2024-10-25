@@ -21,7 +21,7 @@ const Logout: React.FC = () => {
                 navigate('/login')
             }
             else{
-                toast.error('error happened')
+                toast.error('something happened')
             }
         }
         catch(err){
