@@ -1,6 +1,6 @@
 # Registration Page
 
-This project provides a simple and user-friendly registration page where users can sign up securely. User input validation and secure session management are handled, with Access and Refresh tokens used for secure session management.
+This project provides a simple and user-friendly registration page where users can sign up and login securely. User input validation and secure session management are handled, with Access and Refresh tokens used for secure session management.
 
 ## Requirements
 - **Node.js** (version>12)
@@ -8,10 +8,13 @@ This project provides a simple and user-friendly registration page where users c
 
 ## Features
 - Register with username, email, and password
-- Input validation (e.g., email format check)
-- Secure session management with Access and Refresh tokens
+- Login with email and password
+- Input validation (e.g., email format check) with React Formik
+- Trace your network activity if network offline, you cannot post login or signup form 
+- Secure session management with Access and Refresh tokens with JWT
 - Error messages for invalid inputs
-- Redirect to the homepage upon successful registration
+- Redirect to the user upon successful registration
+- Delete related tokens after Logout
 
 ## Access and Refresh Token Overview
 
@@ -35,27 +38,30 @@ This project provides a simple and user-friendly registration page where users c
    ```bash
    git clone (https://github.com/burakcanbz/registration-page.git)
 
-2. Navigate to the project directory:
+2. Navigate to the API directory and install dependencies:
+ 
+    ```
+    cd api/
+    npm install
+    ```
 
-   cd registration-page
-
-3. Install dependencies:
+3. Navigate to the client directory and install dependencies:
   
-  ```bash
-  cd api/
-  npm install
-  cd client/
-  npm install
+   ```
+    cd client/
+    npm install
+    ```
 
 ## Usage
 
-  ```bash
+  ```
   cd api/ 
   npm start 
   cd client/
   npm start
+  ```
 
-***Note: To run api properly it needs MongoDB Configuration.***
+***Note: To run API properly it needs MongoDB Configuration.***
 
 ## MongoDB Configuration
 
@@ -68,5 +74,3 @@ To connect to MongoDB database, you'll need to specify your MongoDB URI and pass
 
 ```plaintext
 mongodb://myUser:myPassword@localhost:27017/myDatabase
-
-
