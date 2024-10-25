@@ -5,7 +5,7 @@ This project provides a simple and user-friendly registration page where users c
 ## Requirements
 - **Node.js** (version>12)
 - **npm** or **yarn**
-- 
+
 ## Features
 - Register with username, email, and password
 - Input validation (e.g., email format check)
